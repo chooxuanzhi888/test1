@@ -7,80 +7,71 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            text-align: center;
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f0f0f0;
         }
-
-        .puzzle-container {
+        #puzzle-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2px;
-            background-color: #ccc;
-            padding: 10px;
-            border: 2px solid #000;
-            max-width: 500px;
+            grid-template-columns: repeat(4, 1fr); /* 4 columns for a 4x4 grid */
+            gap: 2px; /* Small gap between pieces */
+            width: 400px; /* Fixed width for puzzle container */
+            margin: 20px auto; /* Center the container */
         }
-
-        .puzzle-container img {
+        .placeholder {
             width: 100%;
-            height: auto;
-            display: none; /* Initially hide all images */
+            padding-top: 100%; /* Maintain a square aspect ratio */
+            background-color: #ccc; /* Light gray placeholder color */
+            border: 1px solid #888; /* Optional border for placeholders */
+            position: relative;
         }
-
-        h1 {
-            margin-bottom: 20px;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
     </style>
 </head>
 <body>
     <h1>Interactive Puzzle</h1>
-    <div class="puzzle-container">
-        <!-- Puzzle pieces -->
-        <img id="piece1" src="1.png" alt="Puzzle Piece 1">
-        <img id="piece2" src="2.png" alt="Puzzle Piece 2">
-        <img id="piece3" src="3.png" alt="Puzzle Piece 3">
-        <img id="piece4" src="4.png" alt="Puzzle Piece 4">
-        <img id="piece5" src="5.png" alt="Puzzle Piece 5">
-        <img id="piece6" src="6.png" alt="Puzzle Piece 6">
-        <img id="piece7" src="7.png" alt="Puzzle Piece 7">
-        <img id="piece8" src="8.png" alt="Puzzle Piece 8">
-        <img id="piece9" src="9.png" alt="Puzzle Piece 9">
-        <img id="piece10" src="10.png" alt="Puzzle Piece 10">
-        <img id="piece11" src="11.png" alt="Puzzle Piece 11">
-        <img id="piece12" src="12.png" alt="Puzzle Piece 12">
-        <img id="piece13" src="13.png" alt="Puzzle Piece 13">
-        <img id="piece14" src="14.png" alt="Puzzle Piece 14">
-        <img id="piece15" src="15.png" alt="Puzzle Piece 15">
-        <img id="piece16" src="16.png" alt="Puzzle Piece 16">
+    <div id="puzzle-container">
+        <!-- Placeholder boxes for a 4x4 grid -->
+        <div class="placeholder" id="box1"></div>
+        <div class="placeholder" id="box2"></div>
+        <div class="placeholder" id="box3"></div>
+        <div class="placeholder" id="box4"></div>
+        <div class="placeholder" id="box5"></div>
+        <div class="placeholder" id="box6"></div>
+        <div class="placeholder" id="box7"></div>
+        <div class="placeholder" id="box8"></div>
+        <div class="placeholder" id="box9"></div>
+        <div class="placeholder" id="box10"></div>
+        <div class="placeholder" id="box11"></div>
+        <div class="placeholder" id="box12"></div>
+        <div class="placeholder" id="box13"></div>
+        <div class="placeholder" id="box14"></div>
+        <div class="placeholder" id="box15"></div>
+        <div class="placeholder" id="box16"></div>
     </div>
 
     <script>
-        // Function to reveal a puzzle piece based on the URL parameter
-        function revealPuzzlePiece() {
-            // Get the 'id' parameter from the URL
-            const params = new URLSearchParams(window.location.search);
-            const pieceId = params.get('id');
+        // Get the URL query string (e.g., ?id=piece1)
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
 
-            if (pieceId) {
-                const piece = document.getElementById(pieceId);
-                if (piece) {
-                    piece.style.display = 'block'; // Show the puzzle piece
-                } else {
-                    console.error(`No puzzle piece found with ID: ${pieceId}`);
-                }
-            } else {
-                console.log('No puzzle piece ID provided in the URL.');
+        // Check if an 'id' parameter exists in the query string
+        const pieceId = urlParams.get('id');
+
+        if (pieceId) {
+            // Replace the corresponding placeholder with an image
+            const box = document.getElementById(pieceId.replace('piece', 'box'));
+            if (box) {
+                box.innerHTML = `<img src="images/${pieceId}.png" alt="Puzzle Piece">`;
             }
         }
-
-        // Call the function to reveal the appropriate puzzle piece
-        revealPuzzlePiece();
     </script>
 </body>
 </html>
