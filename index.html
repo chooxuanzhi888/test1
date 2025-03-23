@@ -53,17 +53,22 @@
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Listen for QR code data updates
-        database.ref('puzzlePieces').on('value', (snapshot) => {
-            const data = snapshot.val();
+        // Function to render puzzle pieces based on database updates
+        function updatePuzzle(data) {
             if (data) {
                 for (const pieceId in data) {
-                    const box = document.getElementById(pieceId.replace('piece', 'box'));
+                    const box = document.getElementById(`box${pieceId}`);
                     if (box && data[pieceId].scanned) {
                         box.innerHTML = `<img src="images/${pieceId}.png" alt="Puzzle Piece">`;
                     }
                 }
             }
+        }
+
+        // Listen for puzzle piece updates from Firebase
+        database.ref('puzzlePieces').on('value', (snapshot) => {
+            const data = snapshot.val();
+            updatePuzzle(data);
         });
     </script>
 </head>
@@ -90,12 +95,12 @@
     </div>
 
     <script>
-        // Get the URL query string (e.g., ?id=piece1)
+        // Get the URL query string (e.g., ?id=1)
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
 
         // Check if an 'id' parameter exists in the query string
-        const pieceId = urlParams.get('id');
+        const pieceId = urlParams.get('id'); // Expected values: 1, 2, 3, ..., 16
 
         if (pieceId) {
             // Update the Firebase database to mark the piece as scanned
