@@ -56,13 +56,27 @@
             container.innerHTML = ''; // Clear the container first
             database.ref('puzzlePieces').on('value', (snapshot) => {
                 const data = snapshot.val();
-                for (let id in data) {
+                for (let id = 1; id <= 16; id++) { // Loop through 1 to 16 for a 4x4 grid
                     const piece = document.createElement('div');
                     piece.className = 'piece';
-                    if (data[id].scanned) {
+                    if (data && data[id] && data[id].scanned) {
                         piece.innerHTML = `<img src="${id}.png" alt="Puzzle Piece">`;
                     }
                     container.appendChild(piece);
+                }
+            });
+        }
+
+        // Mark a piece as scanned based on URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const pieceId = urlParams.get('id');
+        if (pieceId) {
+            const pieceRef = database.ref(`puzzlePieces/${pieceId}`);
+            pieceRef.set({ scanned: true }, (error) => {
+                if (error) {
+                    console.error("Error updating piece in Firebase:", error);
+                } else {
+                    console.log(`Piece ${pieceId} successfully marked as scanned.`);
                 }
             });
         }
