@@ -34,6 +34,38 @@
             left: 0;
         }
     </style>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Listen for QR code data updates
+        database.ref('puzzlePieces').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                for (const pieceId in data) {
+                    const box = document.getElementById(pieceId.replace('piece', 'box'));
+                    if (box && data[pieceId].scanned) {
+                        box.innerHTML = `<img src="images/${pieceId}.png" alt="Puzzle Piece">`;
+                    }
+                }
+            }
+        });
+    </script>
 </head>
 <body>
     <h1>Interactive Puzzle</h1>
@@ -66,11 +98,9 @@
         const pieceId = urlParams.get('id');
 
         if (pieceId) {
-            // Replace the corresponding placeholder with an image
-            const box = document.getElementById(pieceId.replace('piece', 'box'));
-            if (box) {
-                box.innerHTML = `<img src="images/${pieceId}.png" alt="Puzzle Piece">`;
-            }
+            // Update the Firebase database to mark the piece as scanned
+            const pieceRef = database.ref(`puzzlePieces/${pieceId}`);
+            pieceRef.set({ scanned: true });
         }
     </script>
 </body>
