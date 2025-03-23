@@ -3,125 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Puzzle</title>
+    <title>Simple Puzzle</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
         #puzzle-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 columns for a 4x4 grid */
-            gap: 2px; /* Small gap between pieces */
-            width: 400px; /* Fixed width for puzzle container */
-            margin: 20px auto; /* Center the container */
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            width: 400px;
+            margin: auto;
         }
-        .placeholder {
+        .piece {
             width: 100%;
-            padding-top: 100%; /* Maintain a square aspect ratio */
-            background-color: #ccc; /* Light gray placeholder color */
-            border: 1px solid #888; /* Optional border for placeholders */
+            padding-top: 100%;
+            background-color: #ddd;
             position: relative;
         }
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .piece img {
             position: absolute;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
-    <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDZ175ZGfvTbvVvzOiFO0H85m1V4WIiqOM",
-            authDomain: "test1-55f65.firebaseapp.com",
-            databaseURL: "https://test1-55f65-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "test1-55f65",
-            storageBucket: "test1-55f65.firebasestorage.app",
-            messagingSenderId: "772783754240",
-            appId: "1:772783754240:web:4bcc8e9118d599e13f5ce5",
-            measurementId: "G-368X9LTM94"
-        };
-
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // Function to render puzzle pieces based on database updates
-        function updatePuzzle(data) {
-            if (data) {
-                for (const pieceId in data) {
-                    const box = document.getElementById(`box${pieceId}`);
-                    if (box) {
-                        if (data[pieceId]?.scanned) {
-                            box.innerHTML = `<img src="${pieceId}.png" alt="Puzzle Piece">`;
-                        } else {
-                            box.innerHTML = ""; // Clear the box if not scanned
-                        }
-                    } else {
-                        console.warn(`Box with ID "box${pieceId}" not found.`);
-                    }
-                }
-            } else {
-                console.error("No data received from Firebase.");
-            }
-        }
-
-        // Listen for puzzle piece updates from Firebase
-        database.ref('puzzlePieces').on('value', (snapshot) => {
-            const data = snapshot.val();
-            console.log("Puzzle data updated:", data);
-            updatePuzzle(data);
-        });
-
-        // Get the URL query string (e.g., ?id=1)
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-
-        // Check if an 'id' parameter exists in the query string
-        const pieceId = urlParams.get('id'); // Expected values: 1, 2, 3, ..., 16
-
-        if (pieceId) {
-            console.log("Piece ID from URL:", pieceId);
-            // Update the Firebase database to mark the piece as scanned
-            const pieceRef = database.ref(`puzzlePieces/${pieceId}`);
-            pieceRef.set({ scanned: true }, (error) => {
-                if (error) {
-                    console.error("Error updating Firebase:", error);
-                } else {
-                    console.log(`Piece ${pieceId} marked as scanned.`);
-                }
-            });
-        }
-    </script>
 </head>
 <body>
     <h1>Interactive Puzzle</h1>
     <div id="puzzle-container">
-        <!-- Placeholder boxes for a 4x4 grid -->
-        <div class="placeholder" id="box1"></div>
-        <div class="placeholder" id="box2"></div>
-        <div class="placeholder" id="box3"></div>
-        <div class="placeholder" id="box4"></div>
-        <div class="placeholder" id="box5"></div>
-        <div class="placeholder" id="box6"></div>
-        <div class="placeholder" id="box7"></div>
-        <div class="placeholder" id="box8"></div>
-        <div class="placeholder" id="box9"></div>
-        <div class="placeholder" id="box10"></div>
-        <div class="placeholder" id="box11"></div>
-        <div class="placeholder" id="box12"></div>
-        <div class="placeholder" id="box13"></div>
-        <div class="placeholder" id="box14"></div>
-        <div class="placeholder" id="box15"></div>
-        <div class="placeholder" id="box16"></div>
+        <!-- Placeholder for puzzle pieces -->
     </div>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+    <script>
+        // Your Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyDZ175ZGfvTbvVvzOiFO0H85m1V4WIiqOM",
+          authDomain: "test1-55f65.firebaseapp.com",
+          databaseURL: "https://test1-55f65-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "test1-55f65",
+          storageBucket: "test1-55f65.firebasestorage.app",
+          messagingSenderId: "772783754240",
+          appId: "1:772783754240:web:4bcc8e9118d599e13f5ce5",
+          measurementId: "G-368X9LTM94"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Function to render puzzle pieces
+        function renderPuzzle() {
+            const container = document.getElementById('puzzle-container');
+            container.innerHTML = ''; // Clear the container first
+            database.ref('puzzlePieces').on('value', (snapshot) => {
+                const data = snapshot.val();
+                for (let id in data) {
+                    const piece = document.createElement('div');
+                    piece.className = 'piece';
+                    if (data[id].scanned) {
+                        piece.innerHTML = `<img src="${id}.png" alt="Puzzle Piece">`;
+                    }
+                    container.appendChild(piece);
+                }
+            });
+        }
+
+        // Render the puzzle when the page loads
+        renderPuzzle();
+    </script>
 </body>
 </html>
