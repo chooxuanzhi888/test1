@@ -6,23 +6,26 @@
     <title>Interactive Puzzle</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
             background-color: #f0f0f0;
         }
         .puzzle {
             display: grid;
-            grid-template-columns: repeat(4, auto);
-            gap: 0; /* No spacing between pieces for a seamless look */
-            background-color: #000;
+            grid-template-columns: repeat(4, 1fr); /* 4 pieces per row */
+            gap: 0; /* Remove gaps between grid items */
+            max-width: 500px;
         }
         .puzzle img {
-            width: 100px;
-            height: 100px;
-            display: none; /* Hidden initially */
+            width: 100%;
+            height: auto;
+            display: none; /* Hide images initially */
+            border: none;
         }
     </style>
 </head>
@@ -45,7 +48,6 @@
         <img id="piece15" src="15.png" alt="Puzzle Piece 15">
         <img id="piece16" src="16.png" alt="Puzzle Piece 16">
     </div>
-
     <script>
         function revealPiece() {
             const params = new URLSearchParams(window.location.search);
@@ -58,10 +60,10 @@
                 } else {
                     console.error(`No element found with ID: ${id}`);
                 }
+            } else {
+                console.error('No "id" parameter found in the URL.');
             }
         }
-
-        // Call the function to reveal the piece based on the URL
         revealPiece();
     </script>
 </body>
