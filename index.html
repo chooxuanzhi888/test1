@@ -10,27 +10,38 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             background-color: #f0f0f0;
         }
-        .puzzle {
+
+        .puzzle-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 pieces per row */
-            gap: 0; /* Remove gaps between grid items */
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px; /* Small gaps between pieces */
+            background-color: #ccc;
+            padding: 10px;
+            border: 2px solid #000;
             max-width: 500px;
         }
-        .puzzle img {
+
+        .puzzle-container img {
             width: 100%;
             height: auto;
-            display: none; /* Hide images initially */
-            border: none;
+            display: none; /* Initially hide all images */
+        }
+
+        h1 {
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="puzzle">
+    <h1>Interactive Puzzle</h1>
+    <div class="puzzle-container">
+        <!-- Puzzle pieces -->
         <img id="piece1" src="1.png" alt="Puzzle Piece 1">
         <img id="piece2" src="2.png" alt="Puzzle Piece 2">
         <img id="piece3" src="3.png" alt="Puzzle Piece 3">
@@ -48,23 +59,28 @@
         <img id="piece15" src="15.png" alt="Puzzle Piece 15">
         <img id="piece16" src="16.png" alt="Puzzle Piece 16">
     </div>
-    <script>
-        function revealPiece() {
-            const params = new URLSearchParams(window.location.search);
-            const id = params.get('id'); // Get the piece ID from the URL
 
-            if (id) {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.style.display = 'block'; // Reveal the image
+    <script>
+        // Function to reveal a puzzle piece based on the URL parameter
+        function revealPuzzlePiece() {
+            // Get the 'id' parameter from the URL
+            const params = new URLSearchParams(window.location.search);
+            const pieceId = params.get('id');
+
+            if (pieceId) {
+                const piece = document.getElementById(pieceId);
+                if (piece) {
+                    piece.style.display = 'block'; // Show the puzzle piece
                 } else {
-                    console.error(`No element found with ID: ${id}`);
+                    console.error(`No puzzle piece found with ID: ${pieceId}`);
                 }
             } else {
-                console.error('No "id" parameter found in the URL.');
+                console.log('No puzzle piece ID provided in the URL.');
             }
         }
-        revealPiece();
+
+        // Call the function to reveal the appropriate puzzle piece
+        revealPuzzlePiece();
     </script>
 </body>
 </html>
