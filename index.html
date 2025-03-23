@@ -40,14 +40,14 @@
     <script>
         // Firebase configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyDZ175ZGfvTbvVvzOiFO0H85m1V4WIiqOM",
-          authDomain: "test1-55f65.firebaseapp.com",
-          databaseURL: "https://test1-55f65-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "test1-55f65",
-          storageBucket: "test1-55f65.firebasestorage.app",
-          messagingSenderId: "772783754240",
-          appId: "1:772783754240:web:4bcc8e9118d599e13f5ce5",
-          measurementId: "G-368X9LTM94"
+            apiKey: "AIzaSyDZ175ZGfvTbvVvzOiFO0H85m1V4WIiqOM",
+            authDomain: "test1-55f65.firebaseapp.com",
+            databaseURL: "https://test1-55f65-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "test1-55f65",
+            storageBucket: "test1-55f65.firebasestorage.app",
+            messagingSenderId: "772783754240",
+            appId: "1:772783754240:web:4bcc8e9118d599e13f5ce5",
+            measurementId: "G-368X9LTM94"
         };
 
         // Initialize Firebase
@@ -59,10 +59,14 @@
             if (data) {
                 for (const pieceId in data) {
                     const box = document.getElementById(`box${pieceId}`);
-                    if (box && data[pieceId].scanned) {
+                    if (box && data[pieceId]?.scanned) {
                         box.innerHTML = `<img src="${pieceId}.png" alt="Puzzle Piece">`;
+                    } else if (box) {
+                        box.innerHTML = ""; // Clear the box if not scanned
                     }
                 }
+            } else {
+                console.error("No data received from Firebase.");
             }
         }
 
@@ -71,6 +75,26 @@
             const data = snapshot.val();
             updatePuzzle(data);
         });
+
+        // Get the URL query string (e.g., ?id=1)
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
+        // Check if an 'id' parameter exists in the query string
+        const pieceId = urlParams.get('id'); // Expected values: 1, 2, 3, ..., 16
+
+        if (pieceId) {
+            console.log("Piece ID from URL:", pieceId);
+            // Update the Firebase database to mark the piece as scanned
+            const pieceRef = database.ref(`puzzlePieces/${pieceId}`);
+            pieceRef.set({ scanned: true }, (error) => {
+                if (error) {
+                    console.error("Error updating Firebase:", error);
+                } else {
+                    console.log(`Piece ${pieceId} marked as scanned.`);
+                }
+            });
+        }
     </script>
 </head>
 <body>
@@ -94,20 +118,5 @@
         <div class="placeholder" id="box15"></div>
         <div class="placeholder" id="box16"></div>
     </div>
-
-    <script>
-        // Get the URL query string (e.g., ?id=1)
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-
-        // Check if an 'id' parameter exists in the query string
-        const pieceId = urlParams.get('id'); // Expected values: 1, 2, 3, ..., 16
-
-        if (pieceId) {
-            // Update the Firebase database to mark the piece as scanned
-            const pieceRef = database.ref(`puzzlePieces/${pieceId}`);
-            pieceRef.set({ scanned: true });
-        }
-    </script>
 </body>
 </html>
