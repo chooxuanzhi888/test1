@@ -59,10 +59,14 @@
             if (data) {
                 for (const pieceId in data) {
                     const box = document.getElementById(`box${pieceId}`);
-                    if (box && data[pieceId]?.scanned) {
-                        box.innerHTML = `<img src="${pieceId}.png" alt="Puzzle Piece">`;
-                    } else if (box) {
-                        box.innerHTML = ""; // Clear the box if not scanned
+                    if (box) {
+                        if (data[pieceId]?.scanned) {
+                            box.innerHTML = `<img src="${pieceId}.png" alt="Puzzle Piece">`;
+                        } else {
+                            box.innerHTML = ""; // Clear the box if not scanned
+                        }
+                    } else {
+                        console.warn(`Box with ID "box${pieceId}" not found.`);
                     }
                 }
             } else {
@@ -73,6 +77,7 @@
         // Listen for puzzle piece updates from Firebase
         database.ref('puzzlePieces').on('value', (snapshot) => {
             const data = snapshot.val();
+            console.log("Puzzle data updated:", data);
             updatePuzzle(data);
         });
 
