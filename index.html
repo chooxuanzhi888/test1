@@ -6,84 +6,64 @@
     <title>Interactive Puzzle</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-        }
-        #puzzle-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4x4 grid for 16 pieces */
-            gap: 10px;
+            display: flex;
             justify-content: center;
-            margin: 20px auto;
-            max-width: 80%;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
         }
-        .puzzle-piece {
+        .puzzle {
+            display: grid;
+            grid-template-columns: repeat(4, auto);
+            gap: 2px; /* Adjust spacing between pieces */
+            background-color: #000;
+            padding: 2px;
+        }
+        .puzzle img {
             width: 100px;
             height: 100px;
-            border: 2px solid #ddd;
-            background-color: #eee;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .puzzle-piece img {
-            display: none; /* Initially hidden */
-            max-width: 100%;
-            max-height: 100%;
+            display: none; /* Hidden initially */
         }
     </style>
 </head>
 <body>
-    <h1>Interactive Puzzle</h1>
-    <p>Scan the QR code to reveal the puzzle pieces!</p>
-    <div id="puzzle-container">
-        <!-- Puzzle pieces will be dynamically added here -->
+    <div class="puzzle">
+        <img id="piece1" src="1.png" alt="Puzzle Piece 1">
+        <img id="piece2" src="2.png" alt="Puzzle Piece 2">
+        <img id="piece3" src="3.png" alt="Puzzle Piece 3">
+        <img id="piece4" src="4.png" alt="Puzzle Piece 4">
+        <img id="piece5" src="5.png" alt="Puzzle Piece 5">
+        <img id="piece6" src="6.png" alt="Puzzle Piece 6">
+        <img id="piece7" src="7.png" alt="Puzzle Piece 7">
+        <img id="piece8" src="8.png" alt="Puzzle Piece 8">
+        <img id="piece9" src="9.png" alt="Puzzle Piece 9">
+        <img id="piece10" src="10.png" alt="Puzzle Piece 10">
+        <img id="piece11" src="11.png" alt="Puzzle Piece 11">
+        <img id="piece12" src="12.png" alt="Puzzle Piece 12">
+        <img id="piece13" src="13.png" alt="Puzzle Piece 13">
+        <img id="piece14" src="14.png" alt="Puzzle Piece 14">
+        <img id="piece15" src="15.png" alt="Puzzle Piece 15">
+        <img id="piece16" src="16.png" alt="Puzzle Piece 16">
     </div>
 
     <script>
-        // Puzzle pieces configuration (16 pieces named 1.png, 2.png, ...)
-        const puzzlePieces = [];
-        for (let i = 1; i <= 16; i++) {
-            puzzlePieces.push({ id: `piece${i}`, src: `images/${i}.png` });
-        }
+        function revealPiece() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id'); // Get the piece ID from the URL
 
-        // Initialize the puzzle
-        const puzzleContainer = document.getElementById("puzzle-container");
-        puzzlePieces.forEach(piece => {
-            const div = document.createElement("div");
-            div.className = "puzzle-piece";
-            div.id = piece.id;
-            const img = document.createElement("img");
-            img.src = piece.src;
-            img.alt = piece.id;
-            div.appendChild(img);
-            puzzleContainer.appendChild(div);
-        });
-
-        // Function to reveal a puzzle piece
-        function revealPiece(id) {
-            const piece = document.getElementById(id);
-            if (piece) {
-                const img = piece.querySelector("img");
-                if (img) {
-                    img.style.display = "block"; // Show the image
-                    piece.style.backgroundColor = "transparent"; // Remove placeholder background
-                    piece.style.border = "none"; // Remove border
+            if (id) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.style.display = 'block'; // Reveal the image
+                } else {
+                    console.error(`No element found with ID: ${id}`);
                 }
-            } else {
-                console.error(`No puzzle piece found with ID: ${id}`);
             }
         }
 
-        // Parse URL parameter to reveal a piece
-        const urlParams = new URLSearchParams(window.location.search);
-        const pieceId = urlParams.get("id");
-        if (pieceId) {
-            revealPiece(pieceId);
-        }
+        // Call the function to reveal the piece based on the URL
+        revealPiece();
     </script>
 </body>
 </html>
