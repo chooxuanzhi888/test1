@@ -38,14 +38,14 @@
     <script>
         // Your Firebase configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyDZ175ZGfvTbvVvzOiFO0H85m1V4WIiqOM",
-          authDomain: "test1-55f65.firebaseapp.com",
-          databaseURL: "https://test1-55f65-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "test1-55f65",
-          storageBucket: "test1-55f65.firebasestorage.app",
-          messagingSenderId: "772783754240",
-          appId: "1:772783754240:web:4bcc8e9118d599e13f5ce5",
-          measurementId: "G-368X9LTM94"
+            apiKey: "AIzaSyDZ175ZGfvTbvVvzOiFO0H85m1V4WIiqOM",
+            authDomain: "test1-55f65.firebaseapp.com",
+            databaseURL: "https://test1-55f65-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "test1-55f65",
+            storageBucket: "test1-55f65.firebasestorage.app",
+            messagingSenderId: "772783754240",
+            appId: "1:772783754240:web:4bcc8e9118d599e13f5ce5",
+            measurementId: "G-368X9LTM94"
         };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
@@ -54,15 +54,29 @@
         function renderPuzzle() {
             const container = document.getElementById('puzzle-container');
             container.innerHTML = ''; // Clear the container first
+
+            for (let id = 1; id <= 16; id++) {
+                const piece = document.createElement('div');
+                piece.className = 'piece';
+                piece.id = `box${id}`; // Assign unique IDs for debugging
+
+                // Set up each piece with default empty placeholder
+                piece.innerHTML = '';
+                container.appendChild(piece);
+            }
+
+            // Update the puzzle with data from Firebase
             database.ref('puzzlePieces').on('value', (snapshot) => {
                 const data = snapshot.val();
-                for (let id = 1; id <= 16; id++) { // Loop through 1 to 16 for a 4x4 grid
-                    const piece = document.createElement('div');
-                    piece.className = 'piece';
-                    if (data && data[id] && data[id].scanned) {
-                        piece.innerHTML = `<img src="${id}.png" alt="Puzzle Piece">`;
+                if (data) {
+                    for (let id = 1; id <= 16; id++) {
+                        const piece = document.getElementById(`box${id}`);
+                        if (data[id]?.scanned) {
+                            piece.innerHTML = `<img src="${id}.png" alt="Puzzle Piece">`;
+                        } else {
+                            piece.innerHTML = ''; // Keep as an empty placeholder
+                        }
                     }
-                    container.appendChild(piece);
                 }
             });
         }
