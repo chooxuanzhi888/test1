@@ -40,13 +40,14 @@
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+          apiKey: "AIzaSyDZ175ZGfvTbvVvzOiFO0H85m1V4WIiqOM",
+          authDomain: "test1-55f65.firebaseapp.com",
+          databaseURL: "https://test1-55f65-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "test1-55f65",
+          storageBucket: "test1-55f65.firebasestorage.app",
+          messagingSenderId: "772783754240",
+          appId: "1:772783754240:web:4bcc8e9118d599e13f5ce5",
+          measurementId: "G-368X9LTM94"
         };
 
         // Initialize Firebase
@@ -59,7 +60,7 @@
                 for (const pieceId in data) {
                     const box = document.getElementById(`box${pieceId}`);
                     if (box && data[pieceId].scanned) {
-                        box.innerHTML = `<img src="images/${pieceId}.png" alt="Puzzle Piece">`;
+                        box.innerHTML = `<img src="${pieceId}.png" alt="Puzzle Piece">`;
                     }
                 }
             }
